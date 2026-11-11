@@ -353,7 +353,7 @@ TEXT="
 <code>user   : </code><code>$Username</code>
 <code>────────────────────</code>
 <i>Notif Install Autoscript</i>
-"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"https://t.me/RAIKAZUSTORE"},{"text":"Contack","url":"wa.me/+6282164649858"}]]}'
+"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"https://t.me/Ker4mat_Crew"},{"text":"Contack","url":"wa.me/-"}]]}'
 curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
 }
 clear
