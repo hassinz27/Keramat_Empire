@@ -420,47 +420,69 @@ echo "& plughin Account" >>/etc/ssh/.ssh.db
 }
 function install_xray() {
 clear
-print_install "Core Xray 1.8.1 Latest Version"
-domainSock_dir="/run/xray";! [ -d $domainSock_dir ] && mkdir  $domainSock_dir
-chown www-data.www-data $domainSock_dir
-latest_version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data --version $latest_version
-wget -O /etc/xray/config.json "${REPO}files/config.json" >/dev/null 2>&1
-wget -O /etc/systemd/system/runn.service "${REPO}files/runn.service" >/dev/null 2>&1
-domain=$(cat /etc/xray/domain)
-IPVS=$(cat /etc/xray/ipvps)
-print_success "Core Xray 1.8.1 Latest Version"
+print_install "Core Xray Latest Version"
+
+domainSock_dir="/run/xray"
+mkdir -p "$domainSock_dir"
+
+# Install Xray menggunakan installer rasmi
+bash -c "$(curl -fsSL https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+
+# Config utama Keramat Empire
+wget -q -O /etc/xray/config.json "${REPO}files/config.json"
+
+# Service tambahan jika tersedia
+wget -q -O /etc/systemd/system/runn.service "${REPO}files/runn.service" || true
+
+domain=$(cat /etc/xray/domain 2>/dev/null || true)
+IPVS=$(cat /etc/xray/ipvps 2>/dev/null || true)
+
+print_success "Core Xray Latest Version"
 clear
-curl -s ipinfo.io/city >>/etc/xray/city
-curl -s ipinfo.io/org | cut -d " " -f 2-10 >>/etc/xray/isp
+
+curl -fsSL ipinfo.io/city >/etc/xray/city 2>/dev/null || true
+curl -fsSL ipinfo.io/org | cut -d " " -f 2-10 >/etc/xray/isp 2>/dev/null || true
+
 print_install "Memasang Konfigurasi Packet"
-wget -O /etc/haproxy/haproxy.cfg "${REPO}files/haproxy.cfg" >/dev/null 2>&1
-wget -O /etc/nginx/conf.d/xray.conf "${REPO}files/xray.conf" >/dev/null 2>&1
-sed -i "s/xxx/${domain}/g" /etc/haproxy/haproxy.cfg
-sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
-curl ${REPO}files/nginx.conf > /etc/nginx/nginx.conf
-cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/hap.pem
-chmod +x /etc/systemd/system/runn.service
-rm -rf /etc/systemd/system/xray.service.d
-cat >/etc/systemd/system/xray.service <<EOF
-Description=Xray Service
-Documentation=https://github.com
-After=network.target nss-lookup.target
+
+wget -q -O /etc/haproxy/haproxy.cfg "${REPO}files/haproxy.cfg" || true
+wget -q -O /etc/nginx/conf.d/xray.conf "${REPO}files/xray.conf" || true
+
+if [ -f /etc/haproxy/haproxy.cfg ]; then
+    sed -i "s/xxx/${domain}/g" /etc/haproxy/haproxy.cfg
+fi
+
+if [ -f /etc/nginx/conf.d/xray.conf ]; then
+    sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
+fi
+
+if curl -fsSL "${REPO}files/nginx.conf" >/etc/nginx/nginx.conf; then
+    :
+fi
+
+if [ -f /etc/xray/xray.crt ] && [ -f /etc/xray/xray.key ]; then
+    cat /etc/xray/xray.crt /etc/xray/xray.key > /etc/haproxy/hap.pem
+fi
+
+chmod +x /etc/systemd/system/runn.service 2>/dev/null || true
+
+# Xray rasmi menggunakan user xray.
+# Keramat menu tetap menggunakan /etc/xray/config.json.
+mkdir -p /etc/systemd/system/xray.service.d
+
+cat >/etc/systemd/system/xray.service.d/10-keramat.conf <<'EOF'
 [Service]
-User=www-data
-CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-NoNewPrivileges=true
+ExecStart=
 ExecStart=/usr/local/bin/xray run -config /etc/xray/config.json
-Restart=on-failure
-RestartPreventExitStatus=23
-filesNPROC=10000
-filesNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
 EOF
+
+systemctl daemon-reload
+systemctl enable xray >/dev/null 2>&1
+systemctl restart xray
+
 print_success "Konfigurasi Packet"
 }
+
 function ssh(){
 clear
 print_install "Memasang Password SSH"
