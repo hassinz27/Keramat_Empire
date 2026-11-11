@@ -40,8 +40,8 @@ checking_sc() {
     echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
     echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
     echo -e "             \033[0;33mContact Admin :${NC}"
-    echo -e "      \033[0;36mTelegram${NC} t.me/@Ker4mat_Crew"
-    echo -e "      ${GREEN}WhatsApp${NC} wa.me/0192810017"
+    echo -e "      \033[0;36mTelegram${NC} t.me/@KERAMAT_EMPIRE"
+    echo -e "      ${GREEN}WhatsApp${NC} wa.me/-"
     echo -e "\033[1;93m────────────────────────────────────────────\033[0m"
     exit
   fi
@@ -353,7 +353,7 @@ TEXT="
 <code>user   : </code><code>$Username</code>
 <code>────────────────────</code>
 <i>Notif Install Autoscript</i>
-"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"https://t.me/Ker4mat_Crew"},{"text":"Contack","url":"wa.me/-"}]]}'
+"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"https://t.me/KERAMAT_EMPIRE"},{"text":"Contack","url":"wa.me/-"}]]}'
 curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
 }
 clear
