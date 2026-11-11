@@ -431,9 +431,6 @@ bash -c "$(curl -fsSL https://github.com/XTLS/Xray-install/raw/main/install-rele
 # Config utama Keramat Empire
 wget -q -O /etc/xray/config.json "${REPO}files/config.json"
 
-# Service tambahan jika tersedia
-wget -q -O /etc/systemd/system/runn.service "${REPO}files/runn.service" || true
-
 domain=$(cat /etc/xray/domain 2>/dev/null || true)
 IPVS=$(cat /etc/xray/ipvps 2>/dev/null || true)
 
@@ -442,29 +439,6 @@ clear
 
 curl -fsSL ipinfo.io/city >/etc/xray/city 2>/dev/null || true
 curl -fsSL ipinfo.io/org | cut -d " " -f 2-10 >/etc/xray/isp 2>/dev/null || true
-
-print_install "Memasang Konfigurasi Packet"
-
-wget -q -O /etc/haproxy/haproxy.cfg "${REPO}files/haproxy.cfg" || true
-wget -q -O /etc/nginx/conf.d/xray.conf "${REPO}files/xray.conf" || true
-
-if [ -f /etc/haproxy/haproxy.cfg ]; then
-    sed -i "s/xxx/${domain}/g" /etc/haproxy/haproxy.cfg
-fi
-
-if [ -f /etc/nginx/conf.d/xray.conf ]; then
-    sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
-fi
-
-if curl -fsSL "${REPO}files/nginx.conf" >/etc/nginx/nginx.conf; then
-    :
-fi
-
-if [ -f /etc/xray/xray.crt ] && [ -f /etc/xray/xray.key ]; then
-    cat /etc/xray/xray.crt /etc/xray/xray.key > /etc/haproxy/hap.pem
-fi
-
-chmod +x /etc/systemd/system/runn.service 2>/dev/null || true
 
 # Xray rasmi menggunakan user xray.
 # Keramat menu tetap menggunakan /etc/xray/config.json.
@@ -480,7 +454,18 @@ systemctl daemon-reload
 systemctl enable xray >/dev/null 2>&1
 systemctl restart xray
 
-print_success "Konfigurasi Packet"
+# Pastikan konfigurasi Xray sah sebelum meneruskan.
+if ! /usr/local/bin/xray run -test -config /etc/xray/config.json >/dev/null 2>&1; then
+    print_error "Konfigurasi Xray tidak sah"
+    return 1
+fi
+
+if ! systemctl is-active --quiet xray; then
+    print_error "Service Xray gagal berjalan"
+    return 1
+fi
+
+print_success "Konfigurasi Xray"
 }
 
 function ssh(){
