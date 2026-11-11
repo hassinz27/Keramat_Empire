@@ -40,8 +40,8 @@ checking_sc() {
     echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
     echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
     echo -e "             \033[0;33mContact Admin :${NC}"
-    echo -e "      \033[0;36mTelegram${NC} t.me/@RAIKAZUSTORE"
-    echo -e "      ${GREEN}WhatsApp${NC} wa.me/6282164649858"
+    echo -e "      \033[0;36mTelegram${NC} t.me/@Ker4mat_Crew"
+    echo -e "      ${GREEN}WhatsApp${NC} wa.me/0192810017"
     echo -e "\033[1;93m────────────────────────────────────────────\033[0m"
     exit
   fi
@@ -65,7 +65,7 @@ clear
 clear && clear && clear
 clear;clear;clear
 echo -e "${BlueBee}╔════════════════════════════════════════════════╗${NC}"
-echo -e "\033[96;1m                       RAIKAZU STORE               \033[0m"
+echo -e "\033[96;1m                       KERAMAT STORE               \033[0m"
 echo -e "${BlueBee}╚════════════════════════════════════════════════╝${NC}"
 echo ""
 echo ""
@@ -151,7 +151,7 @@ sts="${Error}"
 fi
 echo -e "\e[32mloading...\e[0m"
 clear
-REPO="https://raw.githubusercontent.com/RaikazuWebId/keramat-empire/main/"
+REPO="https://raw.githubusercontent.com/hassinz27/Keramat_Empire/main/"
 start=$(date +%s)
 secs_to_human() {
 echo "Installation time : $((${1} / 3600)) hours $(((${1} / 60) % 60)) minute's $((${1} % 60)) seconds"
@@ -248,8 +248,8 @@ fi
 }
 
 TIMES="10"
-CHATID="6807547477"
-KEY="7123588087:AAF4QmZq_fbbEUMqztAO-FlczjbOGQhfQQ0"
+CHATID=""
+KEY=""
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 
 # // install paket
@@ -904,10 +904,10 @@ clear
 echo -e ""
 echo -e ""
 echo -e "\e[94;1m╔═════════════════════════════════════════════════╗\e[0m"
-echo -e "\e[96;1m                 ----[ RAIKAZU PROJECT ]----                \e[0m"
+echo -e "\e[96;1m                 ----[ KERAMAT PROJECT ]----                \e[0m"
 echo -e "\e[94;1m╚═════════════════════════════════════════════════╝\e[0m"
 echo ""
-echo -e "\e[95;1m  Telegram : @RAIKAZUSTORE \e[0m"
+echo -e "\e[95;1m  Telegram : @Ker4amat_Crew \e[0m"
 echo ""
 echo -e "\e[94;1m╔═════════════════════════════════════════════════╗\e[0m"
 echo -e "\e[92;1m                  ----[ INSTALL SUCCES ]----                 \e[0m"
